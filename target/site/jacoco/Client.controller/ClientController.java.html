@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ClientController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Client</a> &gt; <a href="index.source.html" class="el_package">Client.controller</a> &gt; <span class="el_source">ClientController.java</span></div><h1>ClientController.java</h1><pre class="source lang-java linenums">package Client.controller;
+
+import Client.exception.ModelNotFoundException;
+import Client.model.Client;
+import Client.service.IClientService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+@RestController
+@RequestMapping(&quot;/api/client&quot;)
+<span class="fc" id="L18">public class ClientController {</span>
+<span class="fc" id="L19">    private static final Logger logger = LoggerFactory.getLogger(ClientController.class);</span>
+    @Autowired
+    private IClientService service;
+    @GetMapping
+    public ResponseEntity&lt;Flux&lt;Client&gt;&gt; list(){
+<span class="nc" id="L24">        logger.info(&quot;Inicio metodo list() de ClientController&quot;);</span>
+<span class="nc" id="L25">        Flux&lt;Client&gt; lista = Flux.empty();</span>
+        try {
+<span class="nc" id="L27">            lista = service.list();</span>
+
+<span class="nc" id="L29">        } catch (Exception e) {</span>
+<span class="nc" id="L30">            logger.info(&quot;Ocurrio un error &quot; + e.getMessage());</span>
+<span class="nc" id="L31">            throw new ModelNotFoundException(e.getMessage());</span>
+        }finally {
+<span class="nc" id="L33">            logger.info( &quot;Fin metodo list() de ClientController&quot;);</span>
+        }
+<span class="nc" id="L35">        return new ResponseEntity&lt;&gt;(lista, HttpStatus.OK);</span>
+    }
+    @PostMapping
+    public ResponseEntity&lt;Mono&lt;Client&gt;&gt; register(@RequestBody Client client){
+<span class="nc" id="L39">        logger.info(&quot;Inicio metodo register() de ClientController&quot;);</span>
+<span class="nc" id="L40">        Mono&lt;Client&gt; p = Mono.empty();</span>
+        try {
+<span class="nc" id="L42">            p = service.register(client);</span>
+
+<span class="nc" id="L44">        } catch (Exception e) {</span>
+<span class="nc" id="L45">            logger.info(&quot;Ocurrio un error &quot; + e.getMessage());</span>
+
+        }finally {
+<span class="nc" id="L48">            logger.info( &quot;Fin metodo register() de ClientController&quot;);</span>
+        }
+<span class="nc" id="L50">        return new ResponseEntity&lt;&gt;(p, HttpStatus.CREATED);</span>
+    }
+    @DeleteMapping(&quot;/{id}&quot;)
+    public Mono&lt;ResponseEntity&lt;Void&gt;&gt; delete(@PathVariable(&quot;id&quot;) String id) {
+<span class="nc" id="L54">        logger.info(&quot;Inicio metodo delete() de ClientController&quot;);</span>
+<span class="nc" id="L55">        return service.delete(id).map(r-&gt;ResponseEntity.ok().&lt;Void&gt;build()).defaultIfEmpty(ResponseEntity.notFound().build());</span>
+    }
+    @CircuitBreaker(name=&quot;client&quot;, fallbackMethod = &quot;fallBackGetClientbyDocumentNumber&quot;)
+    @GetMapping(&quot;/documentNumber/{documentNumber}&quot;)
+    public ResponseEntity&lt;Mono&lt;Client&gt;&gt; clientbydocumentNumber(@PathVariable(&quot;documentNumber&quot;) String documentNumber){
+<span class="nc" id="L60">        logger.info(&quot;Inicio metodo clientbydocumentNumber() de ClientController&quot;);</span>
+<span class="nc" id="L61">        Mono&lt;Client&gt; lista = Mono.empty();</span>
+        try {
+<span class="nc" id="L63">            lista = service.clientbydocumentNumber(documentNumber);</span>
+
+<span class="nc" id="L65">        } catch (Exception e) {</span>
+<span class="nc" id="L66">            logger.info(&quot;Ocurrio un error &quot; + e.getMessage());</span>
+
+        }finally {
+<span class="nc" id="L69">            logger.info( &quot;Fin metodo clientbydocumentNumber() de ClientController&quot;);</span>
+        }
+<span class="nc" id="L71">        return new ResponseEntity&lt;&gt;(lista, HttpStatus.OK);</span>
+    }
+    @CircuitBreaker(name=&quot;client&quot;, fallbackMethod = &quot;fallBackGetClientbyDocumentNumber&quot;)
+    @GetMapping(&quot;/phoneNumber/{phoneNumber}&quot;)
+    public ResponseEntity&lt;Mono&lt;Client&gt;&gt; clientbyphonenumber(@PathVariable(&quot;phoneNumber&quot;) String phoneNumber){
+<span class="nc" id="L76">        logger.info(&quot;Inicio metodo clientbyphonenumber() de ClientController&quot;);</span>
+<span class="nc" id="L77">        Mono&lt;Client&gt; lista = Mono.empty();</span>
+        try {
+<span class="nc" id="L79">            lista = service.clentbyphoneNumber(phoneNumber);</span>
+
+<span class="nc" id="L81">        } catch (Exception e) {</span>
+<span class="nc" id="L82">            logger.info(&quot;Ocurrio un error &quot; + e.getMessage());</span>
+
+        }finally {
+<span class="nc" id="L85">            logger.info( &quot;Fin metodo clientbyphonenumber() de ClientController&quot;);</span>
+        }
+<span class="nc" id="L87">        return new ResponseEntity&lt;&gt;(lista, HttpStatus.OK);</span>
+    }
+    @PutMapping
+    public ResponseEntity&lt;Mono&lt;Client&gt;&gt; update(@RequestBody Client client){
+<span class="nc" id="L91">        logger.info(&quot;Inicio metodo update() de ClientController&quot;);</span>
+<span class="nc" id="L92">        Mono&lt;Client&gt; p = Mono.empty();</span>
+        try {
+<span class="nc" id="L94">            p = service.modify(client);</span>
+
+<span class="nc" id="L96">        } catch (Exception e) {</span>
+<span class="nc" id="L97">            logger.info(&quot;Ocurrio un error &quot; + e.getMessage());</span>
+
+        }finally {
+<span class="nc" id="L100">            logger.info( &quot;Fin metodo clientbydocumentNumber() de ClientController&quot;);</span>
+        }
+<span class="nc" id="L102">        return new ResponseEntity&lt;&gt;(p, HttpStatus.OK);</span>
+    }
+    public ResponseEntity&lt;Mono&lt;Client&gt;&gt; fallBackGetClientbyDocumentNumber(String documentNumber, RuntimeException runtimeException){
+<span class="nc" id="L105">        return new ResponseEntity(&quot;Microservicio Client no funciona&quot;,HttpStatus.OK);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

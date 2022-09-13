@@ -1,0 +1,9 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+Client,Client.model,Client,278,65,62,0,1,10,42,10,11,10
+Client,Client.model,TypeClient.TypeClientBuilder,8,28,0,0,0,1,1,5,1,5
+Client,Client.model,Client.ClientBuilder,16,56,0,0,0,1,1,9,1,9
+Client,Client.model,TypeClient,138,33,30,0,1,6,22,6,7,6
+Client,Client.exception,ModelNotFoundException,4,0,0,0,2,0,1,0,1,0
+Client,Client.service.impl,ClientServiceImpl,21,29,0,0,2,7,3,6,3,6
+Client,Client.controller,ClientController,152,7,0,0,39,2,8,2,8,2
+Client,Client,ClientApplication,5,3,0,0,2,1,1,1,1,1
