@@ -19,6 +19,9 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -43,10 +46,12 @@ class ClientServiceImplTest {
 
     @BeforeEach
     void ini(){
-        clientMono = Mono.just(new Client("1", "PEPITO SAC", "21458963256", "RUC", new TypeClient( "empresarial", "pyme") ));
-        clientflux= Flux.just(new Client("1", "PEPITO SAC", "21458963256", "RUC", new TypeClient( "empresarial", "pyme") ));
-        typeclient= TypeClient.builder().clientType("empresarial").profile("pyme").build();
-        client =Client.builder().idClient("1").name("PEPITO SAC").documentNumber("21458963256").documentType("RUC").typeClient(typeclient).build(); ;
+        List<String> typclient=new ArrayList<>();
+        typclient.add("empresarial");
+        clientMono = Mono.just(new Client("1", "PEPITO SAC", "21458963256", "RUC","789789789","pepito@gmail.com", new TypeClient(typclient, "pyme","123") ));
+        clientflux= Flux.just(new Client("1", "PEPITO SAC", "21458963256", "RUC","789789789","pepito@gmail.com", new TypeClient(typclient, "pyme","123")));
+        typeclient= TypeClient.builder().clientType(typclient).profile("pyme").imei("123").build();
+        client =Client.builder().idClient("1").name("PEPITO SAC").documentNumber("21458963256").documentType("RUC").phoneNumber("789789789").email("pepito@gmail.com").typeClient(typeclient).build(); ;
     }
 
     @Test
@@ -57,7 +62,7 @@ class ClientServiceImplTest {
         clientMono.subscribe(x -> assertEquals("PEPITO SAC", x.getName()));
         clientMono.subscribe(y -> assertEquals("21458963256", y.getDocumentNumber()));
         clientMono.subscribe(z -> assertEquals("RUC", z.getDocumentType()));
-        clientMono.subscribe(w -> assertEquals(new TypeClient("empresarial", "pyme"), w.getTypeClient()));
+
     }
     @Test
     void  listofId(){
@@ -67,7 +72,7 @@ class ClientServiceImplTest {
         clientMono.subscribe(x -> assertEquals("PEPITO SAC", x.getName()));
         clientMono.subscribe(y -> assertEquals("21458963256", y.getDocumentNumber()));
         clientMono.subscribe(z -> assertEquals("RUC", z.getDocumentType()));
-        clientMono.subscribe(w -> assertEquals(new TypeClient("empresarial", "pyme"), w.getTypeClient()));
+
     }
     @Test
     void  list(){

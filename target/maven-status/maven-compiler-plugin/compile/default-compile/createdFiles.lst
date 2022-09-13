@@ -1,0 +1,11 @@
+Client\controller\ClientController.class
+Client\model\Client.class
+Client\model\TypeClient.class
+Client\model\Client$ClientBuilder.class
+Client\service\IClientService.class
+Client\repo\IClientRepo.class
+Client\exception\ModelNotFoundException.class
+Client\model\TypeClient$TypeClientBuilder.class
+Client\ClientApplication.class
+Client\service\ICRUD.class
+Client\service\impl\ClientServiceImpl.class
